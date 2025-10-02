@@ -1,14 +1,104 @@
-# Notebook LM Clone
 
-A comprehensive Notebook LM clone built with FastAPI, LangChain, and React that allows users to upload documents, create interactive notebooks, and leverage AI for intelligent document analysis.
+# Notebook LM Clone – Monorepo
 
-## 🚀 Quick Start
+An open-source clone of Notebook LM (Google's AI-powered notebook), enabling document upload, interactive notebooks, and AI-driven analysis and Q&A. This monorepo contains both backend (FastAPI, LangChain) and frontend (React, Vite) code.
 
-### Prerequisites
-- Python 3.13+
-- Node.js 18+ (for frontend)
-- PostgreSQL 14+
-- UV package manager
+---
+
+## 🏗️ Architecture
+
+- **Backend**: FastAPI, LangChain (planned), PostgreSQL, Vector DB (Chroma/Pinecone)
+- **Frontend**: React, Vite, TypeScript
+- **Monorepo**: Separate `backend/` and `frontend/` modules
+- **AI/ML**: RAG-based Q&A, document summarization, cross-document analysis
+
+---
+
+## 📁 Repository Structure
+
+```
+Notebook_Assistant/
+	backend/                  # FastAPI backend (Python 3.13, UV)
+	frontend/
+		notebook-assistant/     # React + Vite frontend
+	PROJECT_ROADMAP.md        # Development phases and features
+	README.md                 # (This file)
+```
+
+---
+
+## 🚀 Quickstart
+
+### 1. Backend Setup
+
+See [`backend/README.md`](backend/README.md) for full details.
+
+```sh
+cd backend
+uv install
+python main.py
+```
+
+### 2. Frontend Setup
+
+See [`frontend/notebook-assistant/README.md`](frontend/notebook-assistant/README.md) for full details.
+
+```sh
+cd frontend/notebook-assistant
+npm install
+npm run dev
+```
+
+---
+
+## �️ Development Workflow
+
+- **Phase-based**: Follow `PROJECT_ROADMAP.md` for current priorities
+- **Feature Branches**: Use feature branches for new work
+- **Modularity**: Keep code modular and document new modules/components
+
+---
+
+## 🔑 Critical Details
+
+- **Python 3.13** required for backend (see `.python-version`)
+- **UV** for Python dependency management (see backend README)
+- **Node.js v18+** required for frontend
+- **PostgreSQL** must be running for backend DB features
+- **Vector DB** (Chroma/Pinecone) required for embeddings (planned)
+- **API URLs**: Frontend expects backend at `http://localhost:8000` by default
+
+---
+
+## 🐞 Troubleshooting
+
+- **Backend**:
+	- Delete `.venv/` and re-run `uv install` if dependencies break
+	- Ensure Python 3.13 is active (`python --version`)
+	- Make sure PostgreSQL is running and accessible
+	- Check port conflicts if FastAPI fails to start
+- **Frontend**:
+	- Delete `node_modules/` and `package-lock.json` if dependencies break
+	- Use `.env` to override default ports or API URLs
+	- Use Git Bash/WSL on Windows if you hit path/shell issues
+
+---
+
+## 🤝 Contributing
+
+1. Read `PROJECT_ROADMAP.md` for current focus
+2. Use feature branches and submit PRs
+3. Document new features and modules
+
+---
+
+## 📚 References
+
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [LangChain](https://python.langchain.com/)
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [UV](https://github.com/astral-sh/uv)
 
 ### Backend Setup
 ```bash
@@ -17,7 +107,7 @@ uv install
 uv run python main.py
 ```
 
-### Frontend Setup (Coming Soon)
+### Frontend Setup
 ```bash
 cd frontend
 npm install

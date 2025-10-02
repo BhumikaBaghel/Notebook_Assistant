@@ -1,0 +1,13 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Notebook LM Clone Backend"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.118.0",
+    "python-multipart>=0.0.9",  # file uploads
+]
+
+[tool.uv]
+# reserved for uv-specific settings
