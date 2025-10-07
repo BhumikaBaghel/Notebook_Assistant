@@ -5,8 +5,11 @@ description = "Notebook LM Clone Backend"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "alembic>=1.16.5",
     "fastapi[standard]>=0.118.0",
-    "python-multipart>=0.0.9",  # file uploads
+    "psycopg2>=2.9.10",
+    "python-multipart>=0.0.9", # file uploads
+    "sqlalchemy>=2.0.43",
 ]
 
 [tool.uv]

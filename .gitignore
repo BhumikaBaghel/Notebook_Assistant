@@ -6,3 +6,4 @@ backend/uv.lock
 /backend/app/__pycache__
 /backend/app/core/__pycache__
 frontend/notebook-assistant/package-lock.json
+*.pyc

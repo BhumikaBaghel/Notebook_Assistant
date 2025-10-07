@@ -1,14 +1,21 @@
-"""Database connection placeholder.
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-In real implementation this would:
-- Initialize async engine (SQLAlchemy) for PostgreSQL
-- Provide session dependency for FastAPI routes
-- Handle migrations (Alembic)
+engine = create_engine("postgresql+psycopg2://notebook:masteruser@localhost:5432/notebook_db")
+Session = sessionmaker(bind=engine)
 
-For now we expose a fake dependency.
-"""
-from typing import Generator
+def get_db():
+    db = Session()
+    try:
+        yield db
+    finally:
+        db.close()
 
-def get_db() -> Generator[None, None, None]:
-    """Fake DB session dependency."""
-    yield None
+if __name__ == "__main__":
+    # Test the database connection. Please ensure your PostgreSQL server is running. Run the file with `python database.py`
+    try:
+        with engine.connect() as connection:
+            print("Database connection successful")
+    except Exception as e:
+        print("Database connection failed:", e)

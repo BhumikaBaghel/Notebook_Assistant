@@ -1,57 +1,43 @@
-from fastapi import APIRouter, UploadFile, File, Form
-from pydantic import BaseModel
-from typing import List, Optional
+from fastapi import APIRouter, UploadFile, Depends
 import uuid
+from os import listdir
+
+from app.utils.database import get_db
+from app.utils.file_saver import save_file, uploads_dir
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
-class DocumentMetadata(BaseModel):
-    id: str
-    filename: str
-    content_type: Optional[str] = None
-    size_bytes: Optional[int] = None
-    status: str = "uploaded"  # uploaded|processing|ready|error
+@router.post("/upload", summary="Upload one or more documents")
+async def upload_documents(file: UploadFile, db = Depends(get_db)):
+  """
+  Upload endpoint accepting multiple files.\n
+  supported_formats = [".pdf", ".docx", ".txt", ".md", ".xlsx", ".csv"]
+  """
 
-class DocumentUploadResponse(BaseModel):
-    documents: List[DocumentMetadata]
-    message: str = "Upload received"
+  supported_formats = [".pdf", ".docx", ".txt", ".md", ".xlsx", ".csv"]
 
-class DocumentListResponse(BaseModel):
-    documents: List[DocumentMetadata]
+  file_id = str(uuid.uuid4())
+  file_name = file.filename
+  file_size = round(file.size / 1024**2, 2) if file.size else 0
 
-@router.post("/upload", response_model=DocumentUploadResponse, summary="Upload one or more documents")
-async def upload_documents(files: List[UploadFile] = File(...), collection: Optional[str] = Form(None)):
-    """Upload endpoint accepting multiple files.
+  if not any(file.filename.endswith(ext) for ext in supported_formats):
+    return {"error": "Unsupported file format."}
+  
+  if file_size > 30:
+    return {"error": "File size exceeds the 30MB limit."}
 
-    Request: multipart/form-data with one or more `files` and optional `collection` name.
-    Response JSON Example:
-    {
-      "documents": [
-        {"id": "doc_123", "filename": "paper.pdf", "content_type": "application/pdf", "size_bytes": 18273, "status": "uploaded"}
-      ],
-      "message": "Upload received"
+  file_path = save_file(file, file_id)
+  db_entry = {
+    "file_id": file_id,
+    "file_name": file_name,
+    "file_size": file_size,
+    "file_path": file_path
     }
-    """
-    metas = []
-    for f in files:
-        metas.append(DocumentMetadata(
-            id=str(uuid.uuid4()),
-            filename=f.filename,
-            content_type=f.content_type,
-            size_bytes=0,
-            status="uploaded"
-        ))
-    return DocumentUploadResponse(documents=metas)
+  db.add(db_entry)
+  db.commit()
+  return db_entry
 
-@router.get("/", response_model=DocumentListResponse)
-async def list_documents():
-    """List available documents.
-
-    Response Example:
-    {
-      "documents": [
-        {"id": "uuid", "filename": "report.pdf", "status": "ready"}
-      ]
-    }
-    """
-    return DocumentListResponse(documents=[DocumentMetadata(id="fake_report.pdf", filename="report.pdf", status="ready")])
+@router.get("/")
+async def list_documents(db = Depends(get_db)):
+    """List available documents."""
+    return {"documents": listdir(uploads_dir)}
