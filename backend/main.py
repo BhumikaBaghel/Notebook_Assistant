@@ -5,7 +5,6 @@ import time
 from contextlib import asynccontextmanager
 
 # Routers
-from app.api.routes.health import router as health_router
 from app.api.routes.documents import router as documents_router
 from app.api.routes.chat import router as chat_router
 from app.api.routes.notebooks import router as notebooks_router
@@ -32,7 +31,6 @@ async def add_process_time_header(request: Request, call_next):  # pragma: no co
     return response
 
 # Include routers
-app.include_router(health_router)
 app.include_router(documents_router)
 app.include_router(chat_router)
 app.include_router(notebooks_router)
